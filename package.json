@@ -15,7 +15,8 @@
     "dist": "npm run test && npm run clean && npm run mkdir && npm run browserify-dist && npm run uglify-dist",
     "example-server": "cd example && $(npm bin)/http-server",
     "example": "rm -rf example && mkdir -p example && cp src/index.html example/ && npm run browserify-example && npm run uglify-example && npm run example-server",
-    "prepublish": "npm run dist"
+    "prepublish": "npm run dist",
+    "postinstall": "npm run dist"
   },
   "keywords": [
     "commonjs",
