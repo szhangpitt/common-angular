@@ -3,32 +3,63 @@
 <head>
     <title></title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    <script src="ui-utils.js"></script>
+    <script src="ui-utils.min.js"></script>
 </head>
 <body ng-app="example-app">
-    <div ng-controller="MainController">
+    <div>
+        <section ng-controller="LargeNumExample">
+            <h2>largeNum</h2>
 
-        <label>Example 1: input number</label><br>
-        <input type="number" ng-model="val">
-        <div ng-bind="val | largeNum"></div>
-        <br><br>
+            <label>Example 1: input number</label><br>
+            <input type="number" ng-model="val">
+            <div ng-bind="val | largeNum"></div>
+            <br><br>
 
-        <label>Example 2: input bytes</label><br>
-        <input type="number" ng-model="val2"> <label>(try 1024, 65536)</label>
-        <div ng-bind="val2 | largeNum : options2"></div>
+            <label>Example 2: input bytes</label><br>
+            <input type="number" ng-model="val2"> <label>(try 1024, 65536)</label>
+            <div ng-bind="val2 | largeNum : options2"></div>
+            <br><br>
+        </section>
+
+        <section ng-controller="GetExample">
+            <h2>get</h2>
+
+            <label>Example 1: input path</label><br>
+            <pre ng-bind="obj | json : 2"></pre>
+            <input type="text" ng-model="path"><br> <label>(try a, a.b)</label>
+            <pre ng-bind="res | json : 2"></pre>
+            <br><br>
+        </section>
 
     </div>
 
     <script>
         angular.module('example-app', ['ui-utils'])
-            .controller('MainController', [
+            .controller('LargeNumExample', [
                 '$scope',
                 function ($scope) {
+                    console.log('LargeNumExample');
                     $scope.options2 = {
                         step: 1024,
                         digits: 1,
                         units: ['B', 'KB', 'MB', 'GB']
                     };
+            }])
+            .controller('GetExample', ['$scope', 'get', function ($scope, get) {
+                console.log('GetExample');
+                $scope.obj = {
+                    a: {
+                        b: 1024,
+                        c: {
+                            d: 512
+                        }
+                    }
+                };
+
+                $scope.$watch('path', function (path) {
+                    $scope.res = get($scope.obj, path);
+                });
+
             }])
 
     </script>

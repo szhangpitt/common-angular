@@ -4,12 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "$(npm bin)/mocha test",
+    "test": "echo 'add app level test' && exit 0",
     "clean": "rm -rf dist",
     "mkdir": "mkdir -p dist",
-    "browserify": "$(npm bin)/browserify index.js -o dist/ui-utils.js",
-    "dist": "npm run test && npm run clean && npm run mkdir && npm run browserify",
-    "example": "rm -rf example && mkdir -p example && npm run dist && cp src/index.html dist/ui-utils.js example/ && cd example && $(npm bin)/http-server"
+    "browserify": "$(npm bin)/browserify index.js",
+    "browserify-dist": "npm run browserify -- -o dist/ui-utils.js",
+    "browserify-example": "npm run browserify -- -o example/ui-utils.js",
+    "uglify-dist": "cd dist && $(npm bin)/uglifyjs ui-utils.js --compress --mangle --screw-ie8 --output ui-utils.min.js --source-map ui-utils.min.js.map",
+    "uglify-example": "cd example && $(npm bin)/uglifyjs ui-utils.js --compress --mangle --screw-ie8 --output ui-utils.min.js --source-map ui-utils.min.js.map",
+    "dist": "npm run test && npm run clean && npm run mkdir && npm run browserify-dist && npm run uglify-dist",
+    "example-server": "cd example && $(npm bin)/http-server",
+    "example": "rm -rf example && mkdir -p example && cp src/index.html example/ && npm run browserify-example && npm run uglify-example && npm run example-server",
+    "prepublish": "npm run dist"
   },
   "keywords": [
     "commonjs",
@@ -19,11 +25,12 @@
   "author": "Shaopeng Zhang",
   "license": "MIT",
   "devDependencies": {
-    "assert": "^1.4.1",
+    "assert": "~1.4.1",
     "browserify": "~13.0.1",
     "browserify-shim": "~3.8.12",
-    "http-server": "^0.9.0",
-    "mocha": "^2.5.3"
+    "http-server": "~0.9.0",
+    "mocha": "~2.5.3",
+    "uglify-js": "~2.7.0"
   },
   "browserify": {
     "transform": [
@@ -32,5 +39,9 @@
   },
   "browserify-shim": {
     "angular": "global:angular"
+  },
+  "dependencies": {
+    "large-num": "~0.2.0",
+    "lodash.get": "~4.3.0"
   }
 }
